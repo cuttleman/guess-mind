@@ -1,0 +1,22 @@
+{
+  "name": "guess-mind",
+  "version": "1.0.0",
+  "description": "Realtime Game with VanillaJS and SocketIO, Gulp, NodeJS",
+  "main": "index.js",
+  "repository": "https://github.com/ddamjengi1020/guess-mind.git",
+  "author": "ddamjengi <silluat11@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2",
+    "pug": "^2.0.4",
+    "socket.io": "^2.3.0"
+  },
+  "scripts": {
+    "dev:server": "nodemon --exec babel-node src/server"
+  }
+}

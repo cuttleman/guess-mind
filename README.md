@@ -1,7 +1,8 @@
 > *GUESS MIND*
 
-+ SoketIO
++ SocketIO
 + NodeJS
++ Pug
 + Gulp
 + Babel
 + Express
