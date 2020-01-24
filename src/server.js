@@ -24,9 +24,14 @@ const handleListening = () => {
 const server = app.listen(PORT, handleListening);
 const io = socketIO.listen(server);
 
-let socketID = [];
 io.on("connection", socket => {
-  socketID.push(socket.id);
-});
+  socket.on("client hello", () => {
+    setTimeout(() => {
+      console.log("client hi!");
+    }, 5000);
+  });
 
-setInterval(() => console.log(socketID), 1000);
+  setTimeout(() => {
+    socket.emit("server hello");
+  }, 6000);
+});
