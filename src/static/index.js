@@ -1,7 +1,17 @@
 const socket = io();
 
-socket.on("server hello", () => {
-  console.log("server hi!");
-});
+function sendMessage(message) {
+  socket.emit("newMessage", { message });
+  console.log(`me: ${message}`);
+}
 
-socket.emit("client hello");
+function setNickname(nickname) {
+  socket.emit("setNickname", { nickname });
+}
+
+function handleMessageNotif(data) {
+  const { message, nickname } = data;
+  console.log(`${nickname}: ${message}`);
+}
+
+socket.on("messageNotif", handleMessageNotif);
