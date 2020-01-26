@@ -3,6 +3,8 @@ import logger from "morgan";
 import { join } from "path";
 import dotenv from "dotenv";
 import socketIO from "socket.io";
+import session from "express-session";
+import "./db";
 
 dotenv.config();
 
@@ -13,6 +15,15 @@ app.set("view engine", "pug");
 app.set("views", join(__dirname, "views"));
 app.use(logger("dev"));
 app.use(express.static(join(__dirname, "static")));
+app.use(
+  session({
+    secret: process.env.SESSION_SCRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  })
+);
+
 app.get("/", (req, res) => {
   res.render("main");
 });
@@ -34,4 +45,6 @@ io.on("connection", socket => {
   socket.on("setNickname", ({ nickname }) => {
     socket.nickname = nickname;
   });
+
+  console.log(socket.request.headers.cookie);
 });
