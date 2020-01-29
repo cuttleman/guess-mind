@@ -1,6 +1,2 @@
-$red: red;
-$g: green;
-
-body{
-    background-color: $g;
-}
+@import "./config/reset.scss";
+@import "./main.scss";

@@ -7,6 +7,11 @@ html(lang="en")
         link(rel="stylesheet", href="/styles/styles.css")
         title Guess-Mind!
     body
-        h1 Hello World!
+        .loginBox
+            form#jsLoginForm
+                label(for="login") nickname?
+                input(type="text",id="login")
+        .gameBox
+            h1 your logged in
         script(src="/socket.io/socket.io.js")
-        script(src="/index.js")
+        script(src="/js/main.js")

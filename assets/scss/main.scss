@@ -1,0 +1,39 @@
+html{
+    height: 100%;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-family: cursive;
+    font-size: 20px;
+    background-color: #f1f2f6;
+    .loginBox,
+    .gameBox{
+        display: none;
+    }
+    label{
+        display: block;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    input{
+        text-align: center;
+        border-radius: 20px;
+        border: none;
+        padding: 7px 15px;
+        box-shadow: 4px 4px 10px rgba(34, 34, 34, 0.884);
+    }
+    
+    &.logIn{
+        .loginBox{
+            display: block;
+        }
+    }
+    &.logOut{
+        .gameBox{
+            display: block;
+        }
+    }
+}
