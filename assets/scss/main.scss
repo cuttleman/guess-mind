@@ -26,12 +26,12 @@ body{
         box-shadow: 4px 4px 10px rgba(34, 34, 34, 0.884);
     }
     
-    &.logIn{
+    &.loggedOut{
         .loginBox{
             display: block;
         }
     }
-    &.logOut{
+    &.loggedIn{
         .gameBox{
             display: block;
         }

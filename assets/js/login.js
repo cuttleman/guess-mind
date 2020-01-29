@@ -2,8 +2,8 @@ const body = document.querySelector("body");
 const loginForm = document.getElementById("jsLoginForm");
 const input = loginForm.querySelector("input");
 
-const LOGIN = "logIn";
-const LOGOUT = "logOut";
+const LOGGED_OUT = "loggedOut";
+const LOGGED_IN = "loggedIn";
 const NICKNAME = "nickname";
 const nickName = localStorage.getItem(NICKNAME);
 
@@ -12,12 +12,20 @@ const handleLogin = e => {
   const { value } = input;
   input.value = "";
   localStorage.setItem(NICKNAME, value);
+  body.className = LOGGED_IN;
+  login(value);
+};
+
+const login = nickname => {
+  window.socket = io("/");
+  window.socket.emit(window.events.setNickname, { nickname });
 };
 
 if (nickName === null) {
-  body.className = LOGIN;
+  body.className = LOGGED_OUT;
 } else {
-  body.className = LOGOUT;
+  body.className = LOGGED_IN;
+  login(nickName);
 }
 
 if (loginForm) {

@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import socketIO from "socket.io";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import socketController from "./socketController";
+import events from "./events";
 
 dotenv.config();
 
@@ -24,9 +26,9 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.render("main");
-});
+app.get("/", (req, res) =>
+  res.render("main", { events: JSON.stringify(events) })
+);
 
 const handleListening = () => {
   console.log(`🟢  Server running : http://localhost:${PORT}`);
@@ -35,14 +37,4 @@ const handleListening = () => {
 const server = app.listen(PORT, handleListening);
 const io = socketIO.listen(server);
 
-io.on("connection", socket => {
-  socket.on("newMessage", ({ message }) => {
-    socket.broadcast.emit("messageNotif", {
-      message,
-      nickname: socket.nickname || "Anon"
-    });
-  });
-  socket.on("setNickname", ({ nickname }) => {
-    socket.nickname = nickname;
-  });
-});
+io.on("connection", socket => socketController(socket));
