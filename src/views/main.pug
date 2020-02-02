@@ -12,8 +12,11 @@ html(lang="en")
                 label(for="login") nickname?
                 input(type="text",id="login")
         .gameBox
-            h1 your logged in
-            div#jsNotifications
+            div#jsNotifications.notifications
+            .chat
+                ul.chat__messages#jsMessages
+                form.chat__form#jsSendMsg
+                    input.chat__input(type="text",placeholder="Please enter a message")
         script.
             window.events = !{ events }
         script(src="/socket.io/socket.io.js")

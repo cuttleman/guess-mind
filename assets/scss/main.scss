@@ -34,6 +34,11 @@ body{
     &.loggedIn{
         .gameBox{
             display: block;
+            .notifications{
+                div{
+                    margin-bottom: 10px;
+                }
+            }
         }
     }
 }
