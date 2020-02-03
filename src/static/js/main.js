@@ -130,6 +130,13 @@ exports.handleDisconnect = handleDisconnect;
 },{}],5:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleStrokedPath = exports.handleBeganPath = void 0;
+
+var _sockets = require("./sockets");
+
 var canvas = document.getElementById("jsCanvas");
 var ctx = canvas.getContext("2d");
 var colors = document.getElementsByClassName("jsColor");
@@ -137,13 +144,15 @@ var range = document.getElementById("jsRange");
 var mode = document.getElementById("jsMode");
 var save = document.getElementById("jsSave");
 var CANVAS_SIZE = 500;
+var INITIAL_COLOR = "#2c2c2c";
 canvas.width = CANVAS_SIZE;
 canvas.height = CANVAS_SIZE;
 /*pixel modifier*/
 
 ctx.fillStyle = "white";
 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-ctx.strokeStyle = "#2c2c2c";
+ctx.strokeStyle = INITIAL_COLOR;
+ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
 var painting = false;
 var filling = false;
@@ -156,16 +165,32 @@ function startPainting() {
   painting = true;
 }
 
+var beginPath = function beginPath(x, y) {
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+};
+
+var strokePath = function strokePath(x, y) {
+  ctx.lineTo(x, y);
+  ctx.stroke();
+};
+
 function onMouseMove(event) {
   var x = event.offsetX;
   var y = event.offsetY;
 
   if (!painting) {
-    ctx.beginPath();
-    ctx.moveTo(x, y);
+    beginPath(x, y);
+    (0, _sockets.getSocket)().emit(window.events.beginPath, {
+      x: x,
+      y: y
+    });
   } else {
-    ctx.lineTo(x, y);
-    ctx.stroke();
+    strokePath(x, y);
+    (0, _sockets.getSocket)().emit(window.events.strokePath, {
+      x: x,
+      y: y
+    });
   }
 }
 
@@ -233,7 +258,23 @@ if (save) {
   save.addEventListener("click", handleSaveBtn);
 }
 
-},{}],6:[function(require,module,exports){
+var handleBeganPath = function handleBeganPath(_ref) {
+  var x = _ref.x,
+      y = _ref.y;
+  beginPath(x, y);
+};
+
+exports.handleBeganPath = handleBeganPath;
+
+var handleStrokedPath = function handleStrokedPath(_ref2) {
+  var x = _ref2.x,
+      y = _ref2.y;
+  strokePath(x, y);
+};
+
+exports.handleStrokedPath = handleStrokedPath;
+
+},{"./sockets":6}],6:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -244,6 +285,8 @@ exports.initSockets = exports.updateSocket = exports.getSocket = void 0;
 var _notifications = require("./notifications");
 
 var _chat = require("./chat");
+
+var _paint = require("./paint");
 
 var socket = null;
 
@@ -266,8 +309,10 @@ var initSockets = function initSockets(aSocket) {
   aSocket.on(events.newUser, _notifications.handleNewUser);
   aSocket.on(events.disconnected, _notifications.handleDisconnect);
   aSocket.on(events.newMsg, _chat.handleNewMsg);
+  aSocket.on(events.beganPath, _paint.handleBeganPath);
+  aSocket.on(events.strokedPath, _paint.handleStrokedPath);
 };
 
 exports.initSockets = initSockets;
 
-},{"./chat":1,"./notifications":4}]},{},[3]);
+},{"./chat":1,"./notifications":4,"./paint":5}]},{},[3]);
