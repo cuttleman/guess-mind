@@ -1,6 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleNewMsg = void 0;
+
+var _sockets = require("./sockets");
+
 var messages = document.getElementById("jsMessages");
 var sendMsg = document.getElementById("jsSendMsg");
 
@@ -14,15 +21,28 @@ var handleSendMsg = function handleSendMsg(e) {
   e.preventDefault();
   var input = sendMsg.querySelector("input");
   var value = input.value;
+  var _window = window,
+      events = _window.events;
+  (0, _sockets.getSocket)().emit(events.sendMsg, {
+    message: value
+  });
   input.value = "";
   appendMsg(value);
 };
+
+var handleNewMsg = function handleNewMsg(_ref) {
+  var message = _ref.message,
+      nickname = _ref.nickname;
+  return appendMsg(message, nickname);
+};
+
+exports.handleNewMsg = handleNewMsg;
 
 if (sendMsg) {
   sendMsg.addEventListener("submit", handleSendMsg);
 }
 
-},{}],2:[function(require,module,exports){
+},{"./sockets":6}],2:[function(require,module,exports){
 "use strict";
 
 var _sockets = require("./sockets");
@@ -64,7 +84,7 @@ if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
 }
 
-},{"./sockets":5}],3:[function(require,module,exports){
+},{"./sockets":6}],3:[function(require,module,exports){
 "use strict";
 
 require("./sockets");
@@ -75,7 +95,9 @@ require("./notifications");
 
 require("./chat");
 
-},{"./chat":1,"./login":2,"./notifications":4,"./sockets":5}],4:[function(require,module,exports){
+require("./paint");
+
+},{"./chat":1,"./login":2,"./notifications":4,"./paint":5,"./sockets":6}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -108,12 +130,120 @@ exports.handleDisconnect = handleDisconnect;
 },{}],5:[function(require,module,exports){
 "use strict";
 
+var canvas = document.getElementById("jsCanvas");
+var ctx = canvas.getContext("2d");
+var colors = document.getElementsByClassName("jsColor");
+var range = document.getElementById("jsRange");
+var mode = document.getElementById("jsMode");
+var save = document.getElementById("jsSave");
+var CANVAS_SIZE = 500;
+canvas.width = CANVAS_SIZE;
+canvas.height = CANVAS_SIZE;
+/*pixel modifier*/
+
+ctx.fillStyle = "white";
+ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+ctx.strokeStyle = "#2c2c2c";
+ctx.lineWidth = 2.5;
+var painting = false;
+var filling = false;
+
+function stopPainting() {
+  painting = false;
+}
+
+function startPainting() {
+  painting = true;
+}
+
+function onMouseMove(event) {
+  var x = event.offsetX;
+  var y = event.offsetY;
+
+  if (!painting) {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  } else {
+    ctx.lineTo(x, y);
+    ctx.stroke();
+  }
+}
+
+function handleRangeChange(event) {
+  var strokeSize = event.target.value;
+  ctx.lineWidth = strokeSize;
+}
+
+function handleColorClick(event) {
+  var color = event.target.style.backgroundColor;
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+}
+
+function handleFillCanvas() {
+  if (filling) {
+    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  }
+}
+
+function handleModeClick() {
+  if (filling === true) {
+    filling = false;
+    mode.innerText = "Fill";
+  } else {
+    filling = true;
+    mode.innerText = "paint";
+  }
+}
+
+function handleCM(event) {
+  event.preventDefault();
+}
+
+function handleSaveBtn() {
+  var image = canvas.toDataURL();
+  var link = document.createElement("a");
+  link.href = image;
+  link.download = "junint[🎨]";
+  link.click();
+}
+
+if (canvas) {
+  canvas.addEventListener("mousemove", onMouseMove);
+  canvas.addEventListener("mousedown", startPainting);
+  canvas.addEventListener("mouseup", stopPainting);
+  canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleFillCanvas);
+  canvas.addEventListener("contextmenu", handleCM);
+}
+
+Array.from(colors).forEach(function (color) {
+  return color.addEventListener("click", handleColorClick);
+});
+
+if (range) {
+  range.addEventListener("input", handleRangeChange);
+}
+
+if (mode) {
+  mode.addEventListener("click", handleModeClick);
+}
+
+if (save) {
+  save.addEventListener("click", handleSaveBtn);
+}
+
+},{}],6:[function(require,module,exports){
+"use strict";
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.initSockets = exports.updateSocket = exports.getSocket = void 0;
 
 var _notifications = require("./notifications");
+
+var _chat = require("./chat");
 
 var socket = null;
 
@@ -135,8 +265,9 @@ var initSockets = function initSockets(aSocket) {
   updateSocket(aSocket);
   aSocket.on(events.newUser, _notifications.handleNewUser);
   aSocket.on(events.disconnected, _notifications.handleDisconnect);
+  aSocket.on(events.newMsg, _chat.handleNewMsg);
 };
 
 exports.initSockets = initSockets;
 
-},{"./notifications":4}]},{},[3]);
+},{"./chat":1,"./notifications":4}]},{},[3]);

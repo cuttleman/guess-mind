@@ -2,8 +2,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    top: -200px;
-    right: -400px;
+    top: -600px;
+    right: -800px;
     align-items: center;
     .chat__messages{
         position: absolute;
@@ -15,6 +15,17 @@
         border-radius: 10px;
         margin-bottom: 10px;
         box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.377);
+        li{
+            span{
+                
+                &.self{
+                    color: #fa983a;
+                }
+                &.out{
+                    color: black;
+                }
+            }
+        }
     }
     .chat__form{
         position: absolute;
