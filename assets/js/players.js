@@ -4,6 +4,7 @@ import {
   showControls,
   enableCanvas
 } from "./paint";
+import { disableChat } from "./chat";
 
 const playerBoard = document.getElementById("jsPBoard");
 const words = document.getElementById("jsWords");
@@ -28,8 +29,8 @@ const setWords = text => {
 
 export const handleGameStarted = () => {
   setWords("");
-  disableCanvas();
   hideControls();
+  disableCanvas();
 };
 
 export const handleGameEnded = () => {
@@ -42,4 +43,9 @@ export const handleLeaderNotifi = ({ word }) => {
   enableCanvas();
   showControls();
   setWords(word);
+  disableChat();
+};
+
+export const handleGameStarting = () => {
+  setWords("Game Starting Soon!😊");
 };

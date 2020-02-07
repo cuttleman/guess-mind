@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleNewMsg = void 0;
+exports.enableChat = exports.disableChat = exports.handleNewMsg = void 0;
 
 var _sockets = require("./sockets");
 
@@ -30,6 +30,10 @@ var handleSendMsg = function handleSendMsg(e) {
   appendMsg(value);
 };
 
+if (sendMsg) {
+  sendMsg.addEventListener("submit", handleSendMsg);
+}
+
 var handleNewMsg = function handleNewMsg(_ref) {
   var message = _ref.message,
       nickname = _ref.nickname;
@@ -38,9 +42,17 @@ var handleNewMsg = function handleNewMsg(_ref) {
 
 exports.handleNewMsg = handleNewMsg;
 
-if (sendMsg) {
-  sendMsg.addEventListener("submit", handleSendMsg);
-}
+var disableChat = function disableChat() {
+  sendMsg.style.display = "none";
+};
+
+exports.disableChat = disableChat;
+
+var enableChat = function enableChat() {
+  sendMsg.style.display = "block";
+};
+
+exports.enableChat = enableChat;
 
 },{"./sockets":7}],2:[function(require,module,exports){
 "use strict";
@@ -319,13 +331,13 @@ var enableCanvas = function enableCanvas() {
 exports.enableCanvas = enableCanvas;
 
 var hideControls = function hideControls() {
-  controls.style.opacity = 0;
+  controls.style.display = "none";
 };
 
 exports.hideControls = hideControls;
 
 var showControls = function showControls() {
-  controls.style.opacity = 1;
+  controls.style.display = "flex";
 };
 
 exports.showControls = showControls;
@@ -340,9 +352,11 @@ if (canvas) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleLeaderNotifi = exports.handleGameEnded = exports.handleGameStarted = exports.handleUpdatePlayer = void 0;
+exports.handleGameStarting = exports.handleLeaderNotifi = exports.handleGameEnded = exports.handleGameStarted = exports.handleUpdatePlayer = void 0;
 
 var _paint = require("./paint");
+
+var _chat = require("./chat");
 
 var playerBoard = document.getElementById("jsPBoard");
 var words = document.getElementById("jsWords");
@@ -370,8 +384,8 @@ var setWords = function setWords(text) {
 
 var handleGameStarted = function handleGameStarted() {
   setWords("");
-  (0, _paint.disableCanvas)();
   (0, _paint.hideControls)();
+  (0, _paint.disableCanvas)();
 };
 
 exports.handleGameStarted = handleGameStarted;
@@ -389,11 +403,18 @@ var handleLeaderNotifi = function handleLeaderNotifi(_ref2) {
   (0, _paint.enableCanvas)();
   (0, _paint.showControls)();
   setWords(word);
+  (0, _chat.disableChat)();
 };
 
 exports.handleLeaderNotifi = handleLeaderNotifi;
 
-},{"./paint":5}],7:[function(require,module,exports){
+var handleGameStarting = function handleGameStarting() {
+  setWords("Game Starting Soon!😊");
+};
+
+exports.handleGameStarting = handleGameStarting;
+
+},{"./chat":1,"./paint":5}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -431,6 +452,7 @@ var initSockets = function initSockets(aSocket) {
   socket.on(events.gameStarted, _players.handleGameStarted);
   socket.on(events.gameEnded, _players.handleGameEnded);
   socket.on(events.leaderNotifi, _players.handleLeaderNotifi);
+  socket.on(events.gameStarting, _players.handleGameStarting);
 };
 
 exports.initSockets = initSockets;
