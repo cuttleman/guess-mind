@@ -13,8 +13,9 @@ html(lang="en")
                 input(type="text",id="login")
         .gameBox
             div#jsNotifications.notifications
+            .words#jsWords
             canvas#jsCanvas.canvas
-            .controls
+            .controls#jsControls
                 .controls__range
                     input#jsRange(type="range", min="0.1",max="10.0", value="5.0", step="0.1")
                 .controls__btns
@@ -30,6 +31,7 @@ html(lang="en")
                     .controls__color.jsColor(style="background-color:#5AC8FA")
                     .controls__color.jsColor(style="background-color:#0579FF")
                     .controls__color.jsColor(style="background-color:#5856D6")
+            .player__board#jsPBoard
             .chat
                 ul.chat__messages#jsMessages
                 form.chat__form#jsSendMsg

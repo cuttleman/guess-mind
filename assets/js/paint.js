@@ -1,5 +1,6 @@
 import { getSocket } from "./sockets";
 
+const controls = document.getElementById("jsControls");
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");
@@ -110,15 +111,6 @@ function handleSaveBtn() {
   link.click();
 }
 
-if (canvas) {
-  canvas.addEventListener("mousemove", onMouseMove);
-  canvas.addEventListener("mousedown", startPainting);
-  canvas.addEventListener("mouseup", stopPainting);
-  canvas.addEventListener("mouseleave", stopPainting);
-  canvas.addEventListener("click", handleFillCanvas);
-  canvas.addEventListener("contextmenu", handleCM);
-}
-
 Array.from(colors).forEach(color =>
   color.addEventListener("click", handleColorClick)
 );
@@ -146,3 +138,31 @@ export const handleStrokedPath = ({ x, y, color }) => {
 export const handleFilled = ({ color }) => {
   fill(color);
 };
+
+export const disableCanvas = () => {
+  canvas.removeEventListener("mousemove", onMouseMove);
+  canvas.removeEventListener("mousedown", startPainting);
+  canvas.removeEventListener("mouseup", stopPainting);
+  canvas.removeEventListener("mouseleave", stopPainting);
+  canvas.removeEventListener("click", handleFillCanvas);
+};
+
+export const enableCanvas = () => {
+  canvas.addEventListener("mousemove", onMouseMove);
+  canvas.addEventListener("mousedown", startPainting);
+  canvas.addEventListener("mouseup", stopPainting);
+  canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleFillCanvas);
+};
+
+export const hideControls = () => {
+  controls.style.opacity = 0;
+};
+
+export const showControls = () => {
+  controls.style.opacity = 1;
+};
+
+if (canvas) {
+  canvas.addEventListener("contextmenu", handleCM);
+}

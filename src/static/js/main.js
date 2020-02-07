@@ -42,7 +42,7 @@ if (sendMsg) {
   sendMsg.addEventListener("submit", handleSendMsg);
 }
 
-},{"./sockets":6}],2:[function(require,module,exports){
+},{"./sockets":7}],2:[function(require,module,exports){
 "use strict";
 
 var _sockets = require("./sockets");
@@ -84,7 +84,7 @@ if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
 }
 
-},{"./sockets":6}],3:[function(require,module,exports){
+},{"./sockets":7}],3:[function(require,module,exports){
 "use strict";
 
 require("./sockets");
@@ -97,7 +97,7 @@ require("./chat");
 
 require("./paint");
 
-},{"./chat":1,"./login":2,"./notifications":4,"./paint":5,"./sockets":6}],4:[function(require,module,exports){
+},{"./chat":1,"./login":2,"./notifications":4,"./paint":5,"./sockets":7}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -133,10 +133,11 @@ exports.handleDisconnect = handleDisconnect;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleFilled = exports.handleStrokedPath = exports.handleBeganPath = void 0;
+exports.showControls = exports.hideControls = exports.enableCanvas = exports.disableCanvas = exports.handleFilled = exports.handleStrokedPath = exports.handleBeganPath = void 0;
 
 var _sockets = require("./sockets");
 
+var controls = document.getElementById("jsControls");
 var canvas = document.getElementById("jsCanvas");
 var ctx = canvas.getContext("2d");
 var colors = document.getElementsByClassName("jsColor");
@@ -257,15 +258,6 @@ function handleSaveBtn() {
   link.click();
 }
 
-if (canvas) {
-  canvas.addEventListener("mousemove", onMouseMove);
-  canvas.addEventListener("mousedown", startPainting);
-  canvas.addEventListener("mouseup", stopPainting);
-  canvas.addEventListener("mouseleave", stopPainting);
-  canvas.addEventListener("click", handleFillCanvas);
-  canvas.addEventListener("contextmenu", handleCM);
-}
-
 Array.from(colors).forEach(function (color) {
   return color.addEventListener("click", handleColorClick);
 });
@@ -306,7 +298,100 @@ var handleFilled = function handleFilled(_ref3) {
 
 exports.handleFilled = handleFilled;
 
-},{"./sockets":6}],6:[function(require,module,exports){
+var disableCanvas = function disableCanvas() {
+  canvas.removeEventListener("mousemove", onMouseMove);
+  canvas.removeEventListener("mousedown", startPainting);
+  canvas.removeEventListener("mouseup", stopPainting);
+  canvas.removeEventListener("mouseleave", stopPainting);
+  canvas.removeEventListener("click", handleFillCanvas);
+};
+
+exports.disableCanvas = disableCanvas;
+
+var enableCanvas = function enableCanvas() {
+  canvas.addEventListener("mousemove", onMouseMove);
+  canvas.addEventListener("mousedown", startPainting);
+  canvas.addEventListener("mouseup", stopPainting);
+  canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleFillCanvas);
+};
+
+exports.enableCanvas = enableCanvas;
+
+var hideControls = function hideControls() {
+  controls.style.opacity = 0;
+};
+
+exports.hideControls = hideControls;
+
+var showControls = function showControls() {
+  controls.style.opacity = 1;
+};
+
+exports.showControls = showControls;
+
+if (canvas) {
+  canvas.addEventListener("contextmenu", handleCM);
+}
+
+},{"./sockets":7}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleLeaderNotifi = exports.handleGameEnded = exports.handleGameStarted = exports.handleUpdatePlayer = void 0;
+
+var _paint = require("./paint");
+
+var playerBoard = document.getElementById("jsPBoard");
+var words = document.getElementById("jsWords");
+
+var addPlayer = function addPlayer(players) {
+  playerBoard.innerHTML = "";
+  players.forEach(function (player) {
+    var playerEl = document.createElement("span");
+    playerEl.innerText = "".concat(player.nickname, " : ").concat(player.point);
+    playerBoard.appendChild(playerEl);
+  });
+};
+
+var handleUpdatePlayer = function handleUpdatePlayer(_ref) {
+  var sockets = _ref.sockets;
+  addPlayer(sockets);
+};
+
+exports.handleUpdatePlayer = handleUpdatePlayer;
+
+var setWords = function setWords(text) {
+  words.innerText = "";
+  words.innerText = text;
+};
+
+var handleGameStarted = function handleGameStarted() {
+  setWords("");
+  (0, _paint.disableCanvas)();
+  (0, _paint.hideControls)();
+};
+
+exports.handleGameStarted = handleGameStarted;
+
+var handleGameEnded = function handleGameEnded() {
+  setWords("Game Ended");
+};
+
+exports.handleGameEnded = handleGameEnded;
+
+var handleLeaderNotifi = function handleLeaderNotifi(_ref2) {
+  var word = _ref2.word;
+  (0, _paint.enableCanvas)();
+  (0, _paint.showControls)();
+  setWords(word);
+};
+
+exports.handleLeaderNotifi = handleLeaderNotifi;
+
+},{"./paint":5}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -319,6 +404,8 @@ var _notifications = require("./notifications");
 var _chat = require("./chat");
 
 var _paint = require("./paint");
+
+var _players = require("./players");
 
 var socket = null;
 
@@ -338,8 +425,12 @@ var initSockets = function initSockets(aSocket) {
   socket.on(events.beganPath, _paint.handleBeganPath);
   socket.on(events.strokedPath, _paint.handleStrokedPath);
   socket.on(events.filled, _paint.handleFilled);
+  socket.on(events.updatePlayer, _players.handleUpdatePlayer);
+  socket.on(events.gameStarted, _players.handleGameStarted);
+  socket.on(events.gameEnded, _players.handleGameEnded);
+  socket.on(events.leaderNotifi, _players.handleLeaderNotifi);
 };
 
 exports.initSockets = initSockets;
 
-},{"./chat":1,"./notifications":4,"./paint":5}]},{},[3]);
+},{"./chat":1,"./notifications":4,"./paint":5,"./players":6}]},{},[3]);
