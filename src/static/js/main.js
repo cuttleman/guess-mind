@@ -133,7 +133,7 @@ exports.handleDisconnect = handleDisconnect;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleStrokedPath = exports.handleBeganPath = void 0;
+exports.handleFilled = exports.handleStrokedPath = exports.handleBeganPath = void 0;
 
 var _sockets = require("./sockets");
 
@@ -171,8 +171,16 @@ var beginPath = function beginPath(x, y) {
 };
 
 var strokePath = function strokePath(x, y) {
+  var color = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var currentColor = ctx.strokeStyle;
+
+  if (color !== null) {
+    ctx.strokeStyle = color;
+  }
+
   ctx.lineTo(x, y);
   ctx.stroke();
+  ctx.strokeStyle = currentColor;
 };
 
 function onMouseMove(event) {
@@ -189,7 +197,8 @@ function onMouseMove(event) {
     strokePath(x, y);
     (0, _sockets.getSocket)().emit(window.events.strokePath, {
       x: x,
-      y: y
+      y: y,
+      color: ctx.strokeStyle
     });
   }
 }
@@ -205,9 +214,24 @@ function handleColorClick(event) {
   ctx.fillStyle = color;
 }
 
+function fill() {
+  var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var currentColor = ctx.fillStyle;
+
+  if (color !== null) {
+    ctx.fillStyle = color;
+  }
+
+  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  ctx.fillStyle = currentColor;
+}
+
 function handleFillCanvas() {
   if (filling) {
-    ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    fill();
+    (0, _sockets.getSocket)().emit(window.events.fill, {
+      color: ctx.fillStyle
+    });
   }
 }
 
@@ -268,11 +292,19 @@ exports.handleBeganPath = handleBeganPath;
 
 var handleStrokedPath = function handleStrokedPath(_ref2) {
   var x = _ref2.x,
-      y = _ref2.y;
-  strokePath(x, y);
+      y = _ref2.y,
+      color = _ref2.color;
+  strokePath(x, y, color);
 };
 
 exports.handleStrokedPath = handleStrokedPath;
+
+var handleFilled = function handleFilled(_ref3) {
+  var color = _ref3.color;
+  fill(color);
+};
+
+exports.handleFilled = handleFilled;
 
 },{"./sockets":6}],6:[function(require,module,exports){
 "use strict";
@@ -280,7 +312,7 @@ exports.handleStrokedPath = handleStrokedPath;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initSockets = exports.updateSocket = exports.getSocket = void 0;
+exports.initSockets = exports.getSocket = void 0;
 
 var _notifications = require("./notifications");
 
@@ -296,21 +328,16 @@ var getSocket = function getSocket() {
 
 exports.getSocket = getSocket;
 
-var updateSocket = function updateSocket(aSocket) {
-  return socket = aSocket;
-};
-
-exports.updateSocket = updateSocket;
-
 var initSockets = function initSockets(aSocket) {
   var _window = window,
       events = _window.events;
-  updateSocket(aSocket);
-  aSocket.on(events.newUser, _notifications.handleNewUser);
-  aSocket.on(events.disconnected, _notifications.handleDisconnect);
-  aSocket.on(events.newMsg, _chat.handleNewMsg);
-  aSocket.on(events.beganPath, _paint.handleBeganPath);
-  aSocket.on(events.strokedPath, _paint.handleStrokedPath);
+  socket = aSocket;
+  socket.on(events.newUser, _notifications.handleNewUser);
+  socket.on(events.disconnected, _notifications.handleDisconnect);
+  socket.on(events.newMsg, _chat.handleNewMsg);
+  socket.on(events.beganPath, _paint.handleBeganPath);
+  socket.on(events.strokedPath, _paint.handleStrokedPath);
+  socket.on(events.filled, _paint.handleFilled);
 };
 
 exports.initSockets = initSockets;
