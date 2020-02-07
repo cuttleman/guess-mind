@@ -378,6 +378,8 @@ exports.handleGameStarted = handleGameStarted;
 
 var handleGameEnded = function handleGameEnded() {
   setWords("Game Ended");
+  (0, _paint.hideControls)();
+  (0, _paint.disableCanvas)();
 };
 
 exports.handleGameEnded = handleGameEnded;

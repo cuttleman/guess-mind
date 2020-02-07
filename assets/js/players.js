@@ -34,6 +34,8 @@ export const handleGameStarted = () => {
 
 export const handleGameEnded = () => {
   setWords("Game Ended");
+  hideControls();
+  disableCanvas();
 };
 
 export const handleLeaderNotifi = ({ word }) => {
