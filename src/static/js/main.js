@@ -10,6 +10,7 @@ var _sockets = require("./sockets");
 
 var messages = document.getElementById("jsMessages");
 var sendMsg = document.getElementById("jsSendMsg");
+var sendMsgInput = sendMsg.querySelector("input");
 
 var scrollAuto = function scrollAuto() {
   return messages.scrollTop = messages.scrollHeight;
@@ -17,8 +18,8 @@ var scrollAuto = function scrollAuto() {
 
 var appendMsg = function appendMsg(text, nickname) {
   var li = document.createElement("li");
-  li.className = "author ".concat(nickname ? "out" : "self");
-  li.innerHTML = "<span>".concat(nickname ? nickname : "", " ").concat(text, "</span>");
+  li.className = "author ".concat(nickname ? nickname === "bot" ? nickname : "out" : "self");
+  li.innerHTML = "<span>".concat(nickname ? nickname !== "bot" ? nickname : "" : "", " ").concat(text, "</span>");
   messages.appendChild(li);
   scrollAuto();
 };
@@ -49,13 +50,15 @@ var handleNewMsg = function handleNewMsg(_ref) {
 exports.handleNewMsg = handleNewMsg;
 
 var disableChat = function disableChat() {
-  sendMsg.style.display = "none";
+  sendMsg.style.pointerEvents = "none";
+  sendMsgInput.placeholder = "LOCK";
 };
 
 exports.disableChat = disableChat;
 
 var enableChat = function enableChat() {
-  sendMsg.style.display = "block";
+  sendMsg.style.pointerEvents = "initial";
+  sendMsgInput.placeholder = "Please enter a message";
 };
 
 exports.enableChat = enableChat;
@@ -155,7 +158,6 @@ exports.enableCanvas = exports.disableCanvas = exports.handleFilled = exports.ha
 
 var _sockets = require("./sockets");
 
-var controls = document.getElementById("jsControls");
 var canvas = document.getElementById("jsCanvas");
 var ctx = canvas.getContext("2d");
 var colors = document.getElementsByClassName("jsColor");
@@ -346,14 +348,31 @@ if (canvas) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.handleGameStarting = exports.handleLeaderNotifi = exports.handleGameEnded = exports.handleGameStarted = exports.handleUpdatePlayer = void 0;
+exports.handleUnLock = exports.handlereadyBtnLock = exports.handleGameStarting = exports.handleLeaderNotifi = exports.handleGameEnded = exports.handleGameStarted = exports.handleUpdatePlayer = exports.handleNormalShotClock = exports.handleLeaderShotClock = void 0;
 
 var _paint = require("./paint");
 
 var _chat = require("./chat");
 
+var _sockets = require("./sockets");
+
 var playerBoard = document.getElementById("jsPBoard");
 var words = document.getElementById("jsWords");
+var readyBtn = document.getElementById("jsPReady");
+var clock = document.getElementById("jsPClock");
+var timer = clock.querySelector("span");
+var GREY = "#95a5a6";
+var TPRENT = "transparent";
+var GREEN = "#2ecc71";
+var WHITE = "white";
+var LOCK = "#485460";
+var readyClick = false;
+
+var readyBtnChange = function readyBtnChange(bgColor, font, border) {
+  readyBtn.style.backgroundColor = bgColor;
+  readyBtn.style.color = font;
+  readyBtn.style.borderColor = border;
+};
 
 var addPlayer = function addPlayer(players) {
   playerBoard.innerHTML = "";
@@ -364,8 +383,46 @@ var addPlayer = function addPlayer(players) {
   });
 };
 
-var handleUpdatePlayer = function handleUpdatePlayer(_ref) {
-  var sockets = _ref.sockets;
+var readyBtnUnlock = function readyBtnUnlock() {
+  readyBtnChange(TPRENT, GREY, GREY);
+  readyBtn.innerText = "Ready";
+  readyBtn.style.pointerEvents = "initial";
+};
+
+var num = 30;
+
+var countDown = function countDown() {
+  (0, _sockets.getSocket)().emit(window.events.via, {
+    num: num
+  });
+  timer.innerText = "".concat(num);
+  num--;
+};
+
+var handleLeaderShotClock = function handleLeaderShotClock() {
+  var a = setInterval(countDown, 1000);
+  setTimeout(function () {
+    clearInterval(a);
+    (0, _sockets.getSocket)().emit(window.events.timeOut);
+    num = 30;
+    (0, _sockets.getSocket)().emit(window.events.via, {
+      num: num
+    });
+    timer.innerText = "".concat(num);
+  }, 31000);
+};
+
+exports.handleLeaderShotClock = handleLeaderShotClock;
+
+var handleNormalShotClock = function handleNormalShotClock(_ref) {
+  var num = _ref.num;
+  timer.innerText = "".concat(num);
+};
+
+exports.handleNormalShotClock = handleNormalShotClock;
+
+var handleUpdatePlayer = function handleUpdatePlayer(_ref2) {
+  var sockets = _ref2.sockets;
   addPlayer(sockets);
 };
 
@@ -390,8 +447,8 @@ var handleGameEnded = function handleGameEnded() {
 
 exports.handleGameEnded = handleGameEnded;
 
-var handleLeaderNotifi = function handleLeaderNotifi(_ref2) {
-  var word = _ref2.word;
+var handleLeaderNotifi = function handleLeaderNotifi(_ref3) {
+  var word = _ref3.word;
   (0, _paint.enableCanvas)();
   setWords(word);
   (0, _chat.disableChat)();
@@ -405,13 +462,51 @@ var handleGameStarting = function handleGameStarting() {
 
 exports.handleGameStarting = handleGameStarting;
 
-},{"./chat":1,"./paint":5}],7:[function(require,module,exports){
+var handlereadyBtnLock = function handlereadyBtnLock() {
+  readyBtnChange(LOCK, WHITE, LOCK);
+  readyBtn.innerText = "LOCK";
+  readyBtn.style.pointerEvents = "none";
+};
+
+exports.handlereadyBtnLock = handlereadyBtnLock;
+
+var handleUnLock = function handleUnLock() {
+  readyClick = false;
+  readyBtnUnlock();
+  (0, _chat.enableChat)();
+};
+
+exports.handleUnLock = handleUnLock;
+
+var handleReady = function handleReady() {
+  var ready = readyBtn.innerText;
+
+  if (!readyClick) {
+    (0, _sockets.getSocket)().emit(window.events.ready, {
+      ready: ready
+    });
+    readyBtnChange(GREEN, WHITE, GREEN);
+    readyClick = true;
+  } else {
+    (0, _sockets.getSocket)().emit(window.events.unready, {
+      ready: ready
+    });
+    readyBtnChange(TPRENT, GREY, GREY);
+    readyClick = false;
+  }
+};
+
+if (readyBtn) {
+  readyBtn.addEventListener("click", handleReady);
+}
+
+},{"./chat":1,"./paint":5,"./sockets":7}],7:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initSockets = exports.getSocket = void 0;
+exports.getSocket = exports.initSockets = void 0;
 
 var _notifications = require("./notifications");
 
@@ -422,12 +517,6 @@ var _paint = require("./paint");
 var _players = require("./players");
 
 var socket = null;
-
-var getSocket = function getSocket() {
-  return socket;
-};
-
-exports.getSocket = getSocket;
 
 var initSockets = function initSockets(aSocket) {
   var _window = window,
@@ -444,8 +533,18 @@ var initSockets = function initSockets(aSocket) {
   socket.on(events.gameEnded, _players.handleGameEnded);
   socket.on(events.leaderNotifi, _players.handleLeaderNotifi);
   socket.on(events.gameStarting, _players.handleGameStarting);
+  socket.on(events.readyBtnLock, _players.handlereadyBtnLock);
+  socket.on(events.unLock, _players.handleUnLock);
+  socket.on(events.leaderShotClock, _players.handleLeaderShotClock);
+  socket.on(events.normalShotClock, _players.handleNormalShotClock);
 };
 
 exports.initSockets = initSockets;
+
+var getSocket = function getSocket() {
+  return socket;
+};
+
+exports.getSocket = getSocket;
 
 },{"./chat":1,"./notifications":4,"./paint":5,"./players":6}]},{},[3]);

@@ -2,12 +2,17 @@ import { getSocket } from "./sockets";
 
 const messages = document.getElementById("jsMessages");
 const sendMsg = document.getElementById("jsSendMsg");
+const sendMsgInput = sendMsg.querySelector("input");
 const scrollAuto = () => (messages.scrollTop = messages.scrollHeight);
 
 const appendMsg = (text, nickname) => {
   const li = document.createElement("li");
-  li.className = `author ${nickname ? "out" : "self"}`;
-  li.innerHTML = `<span>${nickname ? nickname : ""} ${text}</span>`;
+  li.className = `author ${
+    nickname ? (nickname === "bot" ? nickname : "out") : "self"
+  }`;
+  li.innerHTML = `<span>${
+    nickname ? (nickname !== "bot" ? nickname : "") : ""
+  } ${text}</span>`;
   messages.appendChild(li);
   scrollAuto();
 };
@@ -30,9 +35,11 @@ export const handleNewMsg = ({ message, nickname }) =>
   appendMsg(message, nickname);
 
 export const disableChat = () => {
-  sendMsg.style.display = "none";
+  sendMsg.style.pointerEvents = "none";
+  sendMsgInput.placeholder = "LOCK";
 };
 
 export const enableChat = () => {
-  sendMsg.style.display = "block";
+  sendMsg.style.pointerEvents = "initial";
+  sendMsgInput.placeholder = "Please enter a message";
 };

@@ -1,6 +1,5 @@
 import { getSocket } from "./sockets";
 
-const controls = document.getElementById("jsControls");
 const canvas = document.getElementById("jsCanvas");
 const ctx = canvas.getContext("2d");
 const colors = document.getElementsByClassName("jsColor");

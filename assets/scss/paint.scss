@@ -70,12 +70,13 @@
       }
    }
    .player__section{
+      max-width: 600px;
       display: grid;
-      grid-template-columns: 1fr 3fr;
+      grid-template-columns: 1fr 1fr 3fr;
       grid-template-rows: 0.5fr 0.5fr;
       grid-template-areas: 
-      "clock chat"
-      "player chat";
+      "clock clock chat"
+      "player ready chat";
       .player__clock{
          grid-area: clock;
          display: flex;
@@ -85,17 +86,36 @@
             font-size: 40px;
          }
       }
+      .player__ready{
+         display: flex;
+         justify-self: center;
+         align-self: center;
+         padding: 27px 12px;
+         border-radius: 20px;
+         color: #95a5a6;
+         font-family: 'Jua', sans-serif;
+         font-size: 30px;
+         font-weight: bolder;
+         border: 7px solid #95a5a6;
+         cursor: pointer;
+         transition: all 0.2s linear;
+         &:hover{
+            color: #2ecc71;
+            border: 7px solid #2ecc71;
+         }
+      }
       .player__board{
-         padding: 7px;
+         padding: 4px;
          grid-area: player;
          text-align: center;
          display: flex;
          flex-direction: column;
          span{
-            padding: 5px 15px;
+            padding: 5px 0px;
             border-radius: 10px;
             background-color: white;
             font-family: 'Jua', sans-serif;
+            font-size: 17px;
             &:not(:last-child){
                margin-bottom: 5px;
             }
@@ -107,7 +127,7 @@
          flex-direction: column;
          align-items: flex-end;
          .chat__messages{
-             width: 360px;        
+             width: 320px;        
              height: 150px;
              background-color: white;
              padding: 10px 15px;
@@ -116,12 +136,11 @@
              overflow-y: auto;
              li{
                 margin-bottom: 5px;
+                font-family: 'Nanum Gothic Coding', monospace;
                 &.self{
-                   color: #fa983a;
                    display: flex;
                    justify-content: flex-end;
                    span{
-                      font-family: 'Nanum Gothic Coding', monospace;
                       padding: 7px 15px;
                       border-radius: 10px;
                       border-bottom-right-radius: 0px;
@@ -130,23 +149,31 @@
                    }
                   }
                 &.out{
-                   color: black;
                    display: flex;
                    justify-content: flex-start;
                    span{
-                     font-family: 'Nanum Gothic Coding', monospace;
                      padding: 7px 15px;
                      border-radius: 10px;
                      border-bottom-left-radius: 0px;
                      background-color: #e66767;
                      color: white;
-                   }
                   }
+               }
+               &.bot{
+                  display: flex;
+                  justify-content: center;
+                  span{
+                     padding: 7px 15px;
+                     border-radius: 15px;
+                     background-color: #7f8c8d;
+                     color: white;
+                  }
+               }
              }
          }
          .chat__form{
              .chat__input{
-                width: 360px;
+                width: 320px;
                 border-bottom-left-radius: 10px;
                 border-bottom-right-radius: 10px;
                 border: none;

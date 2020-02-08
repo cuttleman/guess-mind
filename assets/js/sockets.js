@@ -6,12 +6,14 @@ import {
   handleGameStarted,
   handleLeaderNotifi,
   handleGameEnded,
-  handleGameStarting
+  handleGameStarting,
+  handlereadyBtnLock,
+  handleUnLock,
+  handleLeaderShotClock,
+  handleNormalShotClock
 } from "./players";
 
 let socket = null;
-
-export const getSocket = () => socket;
 
 export const initSockets = aSocket => {
   const { events } = window;
@@ -27,4 +29,10 @@ export const initSockets = aSocket => {
   socket.on(events.gameEnded, handleGameEnded);
   socket.on(events.leaderNotifi, handleLeaderNotifi);
   socket.on(events.gameStarting, handleGameStarting);
+  socket.on(events.readyBtnLock, handlereadyBtnLock);
+  socket.on(events.unLock, handleUnLock);
+  socket.on(events.leaderShotClock, handleLeaderShotClock);
+  socket.on(events.normalShotClock, handleNormalShotClock);
 };
+
+export const getSocket = () => socket;
