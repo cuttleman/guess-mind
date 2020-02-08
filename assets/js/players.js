@@ -1,9 +1,4 @@
-import {
-  disableCanvas,
-  hideControls,
-  showControls,
-  enableCanvas
-} from "./paint";
+import { disableCanvas, showControls, enableCanvas } from "./paint";
 import { disableChat } from "./chat";
 
 const playerBoard = document.getElementById("jsPBoard");
@@ -29,19 +24,16 @@ const setWords = text => {
 
 export const handleGameStarted = () => {
   setWords("");
-  hideControls();
   disableCanvas();
 };
 
 export const handleGameEnded = () => {
   setWords("Game Ended");
-  hideControls();
   disableCanvas();
 };
 
 export const handleLeaderNotifi = ({ word }) => {
   enableCanvas();
-  showControls();
   setWords(word);
   disableChat();
 };

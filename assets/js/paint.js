@@ -155,14 +155,6 @@ export const enableCanvas = () => {
   canvas.addEventListener("click", handleFillCanvas);
 };
 
-export const hideControls = () => {
-  controls.style.display = "none";
-};
-
-export const showControls = () => {
-  controls.style.display = "flex";
-};
-
 if (canvas) {
   canvas.addEventListener("contextmenu", handleCM);
 }

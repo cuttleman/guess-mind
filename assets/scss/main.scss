@@ -8,31 +8,68 @@ body{
     height: 100%;
     font-family: cursive;
     font-size: 20px;
-    background-color: #f1f2f6;
-    .loginBox,
-    .gameBox{
+    background-color: #dddddd;
+    .login,
+    .game{
         display: none;
     }
-    label{
-        display: block;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-    input{
-        text-align: center;
-        border-radius: 20px;
-        border: none;
-        padding: 7px 15px;
-        box-shadow: 4px 4px 10px rgba(34, 34, 34, 0.884);
+    .login__box{      
+        max-width: 350px;
+        max-height: 200px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        form{
+            width: 100%;
+            height: 100%;
+            position: relative;
+            label{
+                position: absolute;
+                top: 40px;
+                left: 0;
+                text-align: center;
+                font-family: 'Hi Melody', cursive;
+                font-size: 25px;
+                color: white;
+                opacity: 0;
+                background-color: #e66767;
+                padding: 10px 15px;
+                border-radius: 20px;
+                border-bottom-left-radius: 0;
+                box-shadow: 2px 4px 13px rgba(119, 117, 117, 0.74);
+                animation: setNickname 1s linear forwards;
+            }
+            input{
+                position: absolute;
+                top: 120px;
+                right: 0;
+                max-width: 180px;
+                text-align: center;
+                border-radius: 20px;
+                border-bottom-right-radius: 0;
+                border: none;
+                font-size: 25px;
+                font-family: 'Hi Melody', cursive;
+                padding: 5px 15px;
+                background-color: #f7d794;
+                color: white;
+                opacity: 0;
+                box-shadow: 2px 4px 13px rgba(119, 117, 117, 0.74);
+                animation: setNickname 1s linear forwards 0.7s;
+            }
+        }
     }
     
     &.loggedOut{
-        .loginBox{
+        .login{
             display: block;
         }
     }
     &.loggedIn{
-        .gameBox{
+        .game{
             display: block;
             .notifications{
                 div{
@@ -40,5 +77,16 @@ body{
                 }
             }
         }
+    }
+}
+
+@keyframes setNickname{
+    from{
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0px);
     }
 }

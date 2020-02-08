@@ -70,7 +70,7 @@ const socketController = (socket, io) => {
     broadcast(events.newMsg, { nickname: socket.nickname, message });
     if (word === message) {
       superBroadcast(events.newMsg, {
-        message: `Winning Player : ${socket.nickname} Word was : ${word}`,
+        message: `${socket.nickname} WIN!!`,
         nickname: "Bot"
       });
       addPointer(socket.id);

@@ -1,66 +1,168 @@
-.canvas {
-    margin-left: 100px;
-   width: 500px;
-   height: 500px;
-   background-color: white;
-   border-radius: 5px;
-   box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.233);
-   margin-bottom: 30px;
-}
-
-.controls{
-   display: flex;
-   align-items: center;
-   flex-direction: column;
-   margin-left: 100px;
-   .controls__colors{
-       display: block;
-       position: absolute;
-       top: 90px;
-       left: 650px;
+.game{
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   margin: auto;
+   margin-top: 10px;
+   width: fit-content;
+   .words{
+      position: absolute;
+      padding: 15px;
+      font-family: 'Jua', sans-serif;
+   }
+   .canvas-box{
+      display: flex;
+      .canvas {
+         width: 500px;
+         height: 500px;
+         background-color: white;
+         border-radius: 10px;
+         border-bottom-right-radius: 0px;
+         border-top-right-radius: 0px;
+         margin-bottom: 10px;
+      }
+      .controls{
+         display: flex;
+         flex-direction: column;
+         .controls__btns {
+            display: flex;
+            flex-direction: column;;
+            button{
+               all: unset;
+               cursor: pointer;
+               background-color: white;
+               padding: 4px 0px;
+               text-align: center;
+               border: 1px solid rgba(0, 0, 0, 0.2);
+               text-transform: uppercase;
+               font-size: 14px;
+               transition: all 0.2s linear;
+               &:last-child{
+                  height: 26px;
+               }
+               &:first-child{
+                  border-top-right-radius: 10px;
+               }
+            }
+            button:hover{
+               background-color: #54a0ff;
+               color: white;
+            }
+         }
+         .controls__colors{
+            display: flex;
+            flex-direction: column;
+            .controls__color {
+               width: 100px;
+               height: 49px;
+               transition: opacity 0.2s linear;
+               &:last-child{
+                  border-bottom-right-radius: 10px;
+               }
+               cursor: pointer;
+            }
+            .controls__color:hover{
+               opacity: 0.5;
+            }
+         }
+      }
+   }
+   .player__section{
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      grid-template-rows: 0.5fr 0.5fr;
+      grid-template-areas: 
+      "clock chat"
+      "player chat";
+      .player__clock{
+         grid-area: clock;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         span{
+            font-size: 40px;
+         }
+      }
+      .player__board{
+         padding: 7px;
+         grid-area: player;
+         text-align: center;
+         display: flex;
+         flex-direction: column;
+         span{
+            padding: 5px 15px;
+            border-radius: 10px;
+            background-color: white;
+            font-family: 'Jua', sans-serif;
+            &:not(:last-child){
+               margin-bottom: 5px;
+            }
+         }
+      }
+      .chat{
+         grid-area: chat;
+         display: flex;
+         flex-direction: column;
+         align-items: flex-end;
+         .chat__messages{
+             width: 360px;        
+             height: 150px;
+             background-color: white;
+             padding: 10px 15px;
+             border-top-left-radius: 10px;
+             border-top-right-radius: 10px;
+             overflow-y: auto;
+             li{
+                margin-bottom: 5px;
+                &.self{
+                   color: #fa983a;
+                   display: flex;
+                   justify-content: flex-end;
+                   span{
+                      font-family: 'Nanum Gothic Coding', monospace;
+                      padding: 7px 15px;
+                      border-radius: 10px;
+                      border-bottom-right-radius: 0px;
+                      background-color: #f7d794;
+                      color: white;
+                   }
+                  }
+                &.out{
+                   color: black;
+                   display: flex;
+                   justify-content: flex-start;
+                   span{
+                     font-family: 'Nanum Gothic Coding', monospace;
+                     padding: 7px 15px;
+                     border-radius: 10px;
+                     border-bottom-left-radius: 0px;
+                     background-color: #e66767;
+                     color: white;
+                   }
+                  }
+             }
+         }
+         .chat__form{
+             .chat__input{
+                width: 360px;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                border: none;
+                border-top: 1px dotted rgb(71, 71, 71);
+                padding: 10px 15px;
+                box-shadow: none;
+                font-size: 17px;
+                color: white;
+                text-align: start;
+                background-color: rgb(190, 190, 190);
+                &::placeholder{
+                  color: white;
+                }
+             }
+         }
+      }
    }
 }
 
-.controls__btns {
-   margin-bottom: 20px;
-}
-
-.controls__btns button {
-   all: unset;
-   cursor: pointer;
-   background-color: white;
-   padding: 4px 0px;
-   width: 70px;
-   text-align: center;
-   border-radius: 6px;
-   box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.233);
-   border: 1px solid rgba(0, 0, 0, 0.2);
-   text-transform: uppercase;
-   font-size: 14px;
-}
-
-.controls__btns button:active {
-   transform: scale(0.97);
-}
-
-.controls .controls__colors {
-   display: flex;
-}
-
-.controls__color {
-   width: 50px;
-   height: 50px;
-   box-shadow: 1px 3px 5px 0px rgba(0, 0, 0, 0.233);
-   border-radius: 50%;
-   margin: 5px;
-   cursor: pointer;
-}
-
-.controls__range {
-   margin-bottom: 10px;
-   input{
-       border: none;
-       border-radius: 0px;
-       box-shadow: none;
-   }
-}

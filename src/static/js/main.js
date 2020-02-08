@@ -11,10 +11,16 @@ var _sockets = require("./sockets");
 var messages = document.getElementById("jsMessages");
 var sendMsg = document.getElementById("jsSendMsg");
 
+var scrollAuto = function scrollAuto() {
+  return messages.scrollTop = messages.scrollHeight;
+};
+
 var appendMsg = function appendMsg(text, nickname) {
   var li = document.createElement("li");
-  li.innerHTML = "\n        <span class=\"author ".concat(nickname ? "out" : "self", "\">").concat(nickname ? nickname : "You", "</span>: ").concat(text, "\n    ");
+  li.className = "author ".concat(nickname ? "out" : "self");
+  li.innerHTML = "<span>".concat(nickname ? nickname : "", " ").concat(text, "</span>");
   messages.appendChild(li);
+  scrollAuto();
 };
 
 var handleSendMsg = function handleSendMsg(e) {
@@ -145,7 +151,7 @@ exports.handleDisconnect = handleDisconnect;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.showControls = exports.hideControls = exports.enableCanvas = exports.disableCanvas = exports.handleFilled = exports.handleStrokedPath = exports.handleBeganPath = void 0;
+exports.enableCanvas = exports.disableCanvas = exports.handleFilled = exports.handleStrokedPath = exports.handleBeganPath = void 0;
 
 var _sockets = require("./sockets");
 
@@ -330,18 +336,6 @@ var enableCanvas = function enableCanvas() {
 
 exports.enableCanvas = enableCanvas;
 
-var hideControls = function hideControls() {
-  controls.style.display = "none";
-};
-
-exports.hideControls = hideControls;
-
-var showControls = function showControls() {
-  controls.style.display = "flex";
-};
-
-exports.showControls = showControls;
-
 if (canvas) {
   canvas.addEventListener("contextmenu", handleCM);
 }
@@ -384,7 +378,6 @@ var setWords = function setWords(text) {
 
 var handleGameStarted = function handleGameStarted() {
   setWords("");
-  (0, _paint.hideControls)();
   (0, _paint.disableCanvas)();
 };
 
@@ -392,7 +385,6 @@ exports.handleGameStarted = handleGameStarted;
 
 var handleGameEnded = function handleGameEnded() {
   setWords("Game Ended");
-  (0, _paint.hideControls)();
   (0, _paint.disableCanvas)();
 };
 
@@ -401,7 +393,6 @@ exports.handleGameEnded = handleGameEnded;
 var handleLeaderNotifi = function handleLeaderNotifi(_ref2) {
   var word = _ref2.word;
   (0, _paint.enableCanvas)();
-  (0, _paint.showControls)();
   setWords(word);
   (0, _chat.disableChat)();
 };
