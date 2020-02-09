@@ -10,10 +10,6 @@ var _dotenv = _interopRequireDefault(require("dotenv"));
 
 var _socket = _interopRequireDefault(require("socket.io"));
 
-var _cookieParser = _interopRequireDefault(require("cookie-parser"));
-
-var _expressSession = _interopRequireDefault(require("express-session"));
-
 var _socketController = _interopRequireDefault(require("./socketController"));
 
 var _events = _interopRequireDefault(require("./events"));
@@ -28,12 +24,6 @@ app.set("view engine", "pug");
 app.set("views", (0, _path.join)(__dirname, "views"));
 app.use((0, _morgan["default"])("dev"));
 app.use(_express["default"]["static"]((0, _path.join)(__dirname, "static")));
-app.use((0, _cookieParser["default"])());
-app.use((0, _expressSession["default"])({
-  secret: process.env.COOKIE_SCRET,
-  resave: true,
-  saveUninitialized: false
-}));
 app.get("/", function (req, res) {
   return res.render("main", {
     events: JSON.stringify(_events["default"])
