@@ -15,6 +15,7 @@ const WHITE = "white";
 const LOCK = "#485460";
 
 let readyClick = false;
+let num = 30;
 
 const readyBtnChange = (bgColor, font, border) => {
   readyBtn.style.backgroundColor = bgColor;
@@ -37,26 +38,32 @@ const readyBtnUnlock = () => {
   readyBtn.style.pointerEvents = "initial";
 };
 
-let num = 30;
-const countDown = () => {
-  getSocket().emit(window.events.via, { num });
-  timer.innerText = `${num}`;
-  num--;
-};
-
 export const handleLeaderShotClock = () => {
-  const a = setInterval(countDown, 1000);
-  setTimeout(() => {
-    clearInterval(a);
-    getSocket().emit(window.events.timeOut);
-    num = 30;
-    getSocket().emit(window.events.via, { num });
+  const count = setInterval(() => {
+    const clockNum = parseInt(timer.innerText);
+    let warnning;
+    if (clockNum <= 6 && clockNum % 2 === 1) {
+      warnning = clock.style.animation = "warnning 0.5s linear";
+    } else if (clockNum <= 6 && clockNum % 2 === 0 && clockNum !== 0) {
+      warnning = clock.style.animation = "_warnning 0.5s linear";
+    } else {
+      warnning = clock.style.animation = "unset";
+    }
+    getSocket().emit(window.events.via, { num, warnning });
     timer.innerText = `${num}`;
-  }, 31000);
+    num--;
+    if (words.innerText === "Game Ended") {
+      clearInterval(count);
+      num = 30;
+      timer.innerText = `${num}`;
+      getSocket().emit(window.events.via, { num });
+    }
+  }, 1000);
 };
 
-export const handleNormalShotClock = ({ num }) => {
+export const handleNormalShotClock = ({ num, warnning }) => {
   timer.innerText = `${num}`;
+  clock.style.animation = warnning;
 };
 
 export const handleUpdatePlayer = ({ sockets }) => {
@@ -85,7 +92,7 @@ export const handleLeaderNotifi = ({ word }) => {
 };
 
 export const handleGameStarting = () => {
-  setWords("Game Starting Soon!😊");
+  setWords("Game Starting Soon (๑•̀ㅂ•́)و✧");
 };
 
 export const handlereadyBtnLock = () => {

@@ -13,6 +13,7 @@ body{
     .game{
         display: none;
     }
+
     .login__box{      
         max-width: 350px;
         max-height: 200px;
@@ -29,7 +30,7 @@ body{
             label{
                 position: absolute;
                 top: 40px;
-                left: 0;
+                left: 10px;
                 text-align: center;
                 font-family: 'Hi Melody', cursive;
                 font-size: 25px;
@@ -58,7 +59,15 @@ body{
                 color: white;
                 opacity: 0;
                 box-shadow: 2px 4px 13px rgba(119, 117, 117, 0.74);
-                animation: setNickname 1s linear forwards 0.7s;
+                animation: setNickname 1s linear forwards 0.7s ;
+            }
+            .main__title{
+                position: absolute;
+                top: -70px;
+                right: 10px;
+                font-family: 'Gugi', cursive;
+                font-size: 60px;
+                animation: title 5s linear infinite;
             }
         }
     }
@@ -89,4 +98,28 @@ body{
         opacity: 1;
         transform: translateY(0px);
     }
+}
+
+@keyframes title{
+    0%{
+        opacity: 0.3;
+        transform: translateY(-15px);
+    }
+    25%{
+        opacity: 1;
+        transform: translateY(0);
+    }
+    50%{
+        opacity: 0.3;
+        transform: translateY(-15px);
+    }
+    75%{
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100%{
+        opacity: 0.3;
+        transform: translateY(-15px);
+    }
+    
 }

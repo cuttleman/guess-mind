@@ -50,9 +50,14 @@ const socketController = (socket, io) => {
   };
 
   socket.on(events.setNickname, ({ nickname }) => {
-    broadcast(events.newUser, { nickname });
     socket.nickname = nickname;
     sockets.push({ id: socket.id, point: 0, nickname: socket.nickname });
+    if (sockets.length < 4) {
+      broadcast(events.newUser, { nickname });
+    } else if (sockets.length >= 4) {
+      sockets.pop();
+      socket.emit(events.goAway);
+    }
     sendUpdatePlayer();
   });
 
@@ -73,10 +78,11 @@ const socketController = (socket, io) => {
     broadcast(events.newMsg, { nickname: socket.nickname, message });
     if (word === message) {
       superBroadcast(events.newMsg, {
-        message: `${socket.nickname} WIN!!`,
+        message: `Winner ${socket.nickname}`,
         nickname: BOT
       });
       addPointer(socket.id);
+      endGame();
     }
   });
 
@@ -95,7 +101,7 @@ const socketController = (socket, io) => {
   socket.on(events.ready, ({ ready }) => {
     playerReady.push(ready);
     superBroadcast(events.newMsg, {
-      message: `${socket.nickname} 준비됐대`,
+      message: `${socket.nickname} Ready`,
       nickname: BOT
     });
     if (playerReady.length === 2) {
@@ -106,25 +112,24 @@ const socketController = (socket, io) => {
   socket.on(events.unready, ({ ready }) => {
     playerReady.pop(ready);
     superBroadcast(events.newMsg, {
-      message: `${socket.nickname} 준비취소했어`,
+      message: `${socket.nickname} Unready`,
       nickname: BOT
     });
     if (playerReady.length !== 2) {
       endGame();
     }
   });
-  socket.on(events.via, ({ num }) => {
-    broadcast(events.normalShotClock, { num });
+  socket.on(events.via, ({ num, warnning }) => {
+    broadcast(events.normalShotClock, { num, warnning });
+    if (num === 0) {
+      endGame();
+      superBroadcast(events.newMsg, {
+        message: `Winner ${leader.nickname}`,
+        nickname: BOT
+      });
+      addPointer(leader.id);
+    }
   });
-
-  socket.on(events.timeOut, () => {
-    superBroadcast(events.newMsg, {
-      message: `${leader.nickname} WIN!!`,
-      nickname: BOT
-    });
-    addPointer(leader.id);
-  });
-  // setInterval(() => console.log(playerReady.length), 3000);
 };
 
 export default socketController;

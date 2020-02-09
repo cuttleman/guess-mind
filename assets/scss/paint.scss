@@ -15,7 +15,7 @@
    .canvas-box{
       display: flex;
       .canvas {
-         width: 500px;
+         width: 400px;
          height: 500px;
          background-color: white;
          border-radius: 10px;
@@ -55,7 +55,7 @@
             display: flex;
             flex-direction: column;
             .controls__color {
-               width: 100px;
+               width: 80px;
                height: 49px;
                transition: opacity 0.2s linear;
                &:last-child{
@@ -70,48 +70,51 @@
       }
    }
    .player__section{
-      max-width: 600px;
+      max-width: 480px;
       display: grid;
-      grid-template-columns: 1fr 1fr 3fr;
-      grid-template-rows: 0.5fr 0.5fr;
+      grid-template-columns: 0.6fr 0.7fr 3fr;
+      grid-template-rows: 0.3fr 0.3fr 0.6fr;
+      grid-gap:5px;
       grid-template-areas: 
+      "ready ready chat"
       "clock clock chat"
-      "player ready chat";
+      "player player chat";
       .player__clock{
          grid-area: clock;
+         background-color: white;
+         border-radius: 10px;
          display: flex;
          justify-content: center;
          align-items: center;
          span{
-            font-size: 40px;
+            font-size: 30px;
+            font-weight: bolder;
          }
       }
       .player__ready{
+         grid-area: ready;
          display: flex;
          justify-self: center;
          align-self: center;
-         padding: 27px 12px;
-         border-radius: 20px;
+         padding: 8px 34px;
+         border-radius: 10px;
          color: #95a5a6;
          font-family: 'Jua', sans-serif;
-         font-size: 30px;
+         font-size: 24px;
          font-weight: bolder;
-         border: 7px solid #95a5a6;
+         border: 6px solid #95a5a6;
          cursor: pointer;
          transition: all 0.2s linear;
-         &:hover{
-            color: #2ecc71;
-            border: 7px solid #2ecc71;
-         }
       }
       .player__board{
-         padding: 4px;
          grid-area: player;
          text-align: center;
          display: flex;
          flex-direction: column;
+         align-items: center;
          span{
-            padding: 5px 0px;
+            max-width: 148px;
+            padding: 5px 10px;
             border-radius: 10px;
             background-color: white;
             font-family: 'Jua', sans-serif;
@@ -125,18 +128,22 @@
          grid-area: chat;
          display: flex;
          flex-direction: column;
-         align-items: flex-end;
+         align-items: center;
          .chat__messages{
-             width: 320px;        
-             height: 150px;
+             width: 300px;        
+             height: 160px;
              background-color: white;
              padding: 10px 15px;
              border-top-left-radius: 10px;
              border-top-right-radius: 10px;
              overflow-y: auto;
              li{
-                margin-bottom: 5px;
+                margin-bottom: 6px;
                 font-family: 'Nanum Gothic Coding', monospace;
+                font-size: 15px;
+                span{
+                   box-shadow: 0px 2px 5px rgb(139, 139, 139);
+                }
                 &.self{
                    display: flex;
                    justify-content: flex-end;
@@ -144,7 +151,7 @@
                       padding: 7px 15px;
                       border-radius: 10px;
                       border-bottom-right-radius: 0px;
-                      background-color: #f7d794;
+                      background-color: #f1cd7f;
                       color: white;
                    }
                   }
@@ -159,10 +166,10 @@
                      color: white;
                   }
                }
-               &.bot{
-                  display: flex;
-                  justify-content: center;
-                  span{
+                &.bot{
+                   display: flex;
+                   justify-content: center;
+                   span{
                      padding: 7px 15px;
                      border-radius: 15px;
                      background-color: #7f8c8d;
@@ -173,7 +180,7 @@
          }
          .chat__form{
              .chat__input{
-                width: 320px;
+                width: 300px;
                 border-bottom-left-radius: 10px;
                 border-bottom-right-radius: 10px;
                 border: none;
@@ -193,3 +200,38 @@
    }
 }
 
+@keyframes warnning {
+   0%{
+      background-color: rgb(250, 78, 78);
+      color: white;
+      transform: translateX(-1px);
+   }
+   50%{
+      background-color: white;
+      color: black;
+      transform: translateX(1px);
+   }
+   100%{
+      background-color: rgb(250, 78, 78);
+      color: white;
+      transform: translateX(-1px);
+   }
+}
+
+@keyframes _warnning {
+   0%{
+      background-color: rgb(250, 78, 78);
+      color: white;
+      transform: translateX(-1px);
+   }
+   50%{
+      background-color: white;
+      color: black;
+      transform: translateX(1px);
+   }
+   100%{
+      background-color: rgb(250, 78, 78);
+      color: white;
+      transform: translateX(-1px);
+   }
+}

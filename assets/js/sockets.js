@@ -12,6 +12,7 @@ import {
   handleLeaderShotClock,
   handleNormalShotClock
 } from "./players";
+import { handleGoAway } from "./login";
 
 let socket = null;
 
@@ -33,6 +34,7 @@ export const initSockets = aSocket => {
   socket.on(events.unLock, handleUnLock);
   socket.on(events.leaderShotClock, handleLeaderShotClock);
   socket.on(events.normalShotClock, handleNormalShotClock);
+  socket.on(events.goAway, handleGoAway);
 };
 
 export const getSocket = () => socket;

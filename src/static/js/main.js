@@ -66,6 +66,11 @@ exports.enableChat = enableChat;
 },{"./sockets":7}],2:[function(require,module,exports){
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.handleGoAway = void 0;
+
 var _sockets = require("./sockets");
 
 var body = document.querySelector("body");
@@ -104,6 +109,16 @@ if (nickName === null) {
 if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
 }
+
+var handleGoAway = function handleGoAway() {
+  localStorage.removeItem(NICKNAME);
+  alert("User is full😥");
+  setTimeout(function () {
+    return location.reload();
+  }, 100);
+};
+
+exports.handleGoAway = handleGoAway;
 
 },{"./sockets":7}],3:[function(require,module,exports){
 "use strict";
@@ -164,14 +179,15 @@ var colors = document.getElementsByClassName("jsColor");
 var range = document.getElementById("jsRange");
 var mode = document.getElementById("jsMode");
 var save = document.getElementById("jsSave");
-var CANVAS_SIZE = 500;
+var CANVAS_W_SIZE = 400;
+var CANVAS_H_SIZE = 500;
 var INITIAL_COLOR = "#2c2c2c";
-canvas.width = CANVAS_SIZE;
-canvas.height = CANVAS_SIZE;
+canvas.width = CANVAS_W_SIZE;
+canvas.height = CANVAS_H_SIZE;
 /*pixel modifier*/
 
 ctx.fillStyle = "white";
-ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+ctx.fillRect(0, 0, CANVAS_W_SIZE, CANVAS_H_SIZE);
 ctx.strokeStyle = INITIAL_COLOR;
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
@@ -243,7 +259,7 @@ function fill() {
     ctx.fillStyle = color;
   }
 
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  ctx.fillRect(0, 0, CANVAS_W_SIZE, CANVAS_H_SIZE);
   ctx.fillStyle = currentColor;
 }
 
@@ -367,6 +383,7 @@ var GREEN = "#2ecc71";
 var WHITE = "white";
 var LOCK = "#485460";
 var readyClick = false;
+var num = 30;
 
 var readyBtnChange = function readyBtnChange(bgColor, font, border) {
   readyBtn.style.backgroundColor = bgColor;
@@ -389,34 +406,44 @@ var readyBtnUnlock = function readyBtnUnlock() {
   readyBtn.style.pointerEvents = "initial";
 };
 
-var num = 30;
-
-var countDown = function countDown() {
-  (0, _sockets.getSocket)().emit(window.events.via, {
-    num: num
-  });
-  timer.innerText = "".concat(num);
-  num--;
-};
-
 var handleLeaderShotClock = function handleLeaderShotClock() {
-  var a = setInterval(countDown, 1000);
-  setTimeout(function () {
-    clearInterval(a);
-    (0, _sockets.getSocket)().emit(window.events.timeOut);
-    num = 30;
+  var count = setInterval(function () {
+    var clockNum = parseInt(timer.innerText);
+    var warnning;
+
+    if (clockNum <= 6 && clockNum % 2 === 1) {
+      warnning = clock.style.animation = "warnning 0.5s linear";
+    } else if (clockNum <= 6 && clockNum % 2 === 0 && clockNum !== 0) {
+      warnning = clock.style.animation = "_warnning 0.5s linear";
+    } else {
+      warnning = clock.style.animation = "unset";
+    }
+
     (0, _sockets.getSocket)().emit(window.events.via, {
-      num: num
+      num: num,
+      warnning: warnning
     });
     timer.innerText = "".concat(num);
-  }, 31000);
+    num--;
+
+    if (words.innerText === "Game Ended") {
+      clearInterval(count);
+      num = 30;
+      timer.innerText = "".concat(num);
+      (0, _sockets.getSocket)().emit(window.events.via, {
+        num: num
+      });
+    }
+  }, 1000);
 };
 
 exports.handleLeaderShotClock = handleLeaderShotClock;
 
 var handleNormalShotClock = function handleNormalShotClock(_ref) {
-  var num = _ref.num;
+  var num = _ref.num,
+      warnning = _ref.warnning;
   timer.innerText = "".concat(num);
+  clock.style.animation = warnning;
 };
 
 exports.handleNormalShotClock = handleNormalShotClock;
@@ -457,7 +484,7 @@ var handleLeaderNotifi = function handleLeaderNotifi(_ref3) {
 exports.handleLeaderNotifi = handleLeaderNotifi;
 
 var handleGameStarting = function handleGameStarting() {
-  setWords("Game Starting Soon!😊");
+  setWords("Game Starting Soon (๑•̀ㅂ•́)و✧");
 };
 
 exports.handleGameStarting = handleGameStarting;
@@ -516,6 +543,8 @@ var _paint = require("./paint");
 
 var _players = require("./players");
 
+var _login = require("./login");
+
 var socket = null;
 
 var initSockets = function initSockets(aSocket) {
@@ -537,6 +566,7 @@ var initSockets = function initSockets(aSocket) {
   socket.on(events.unLock, _players.handleUnLock);
   socket.on(events.leaderShotClock, _players.handleLeaderShotClock);
   socket.on(events.normalShotClock, _players.handleNormalShotClock);
+  socket.on(events.goAway, _login.handleGoAway);
 };
 
 exports.initSockets = initSockets;
@@ -547,4 +577,4 @@ var getSocket = function getSocket() {
 
 exports.getSocket = getSocket;
 
-},{"./chat":1,"./notifications":4,"./paint":5,"./players":6}]},{},[3]);
+},{"./chat":1,"./login":2,"./notifications":4,"./paint":5,"./players":6}]},{},[3]);

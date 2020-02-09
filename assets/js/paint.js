@@ -6,15 +6,16 @@ const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const save = document.getElementById("jsSave");
-const CANVAS_SIZE = 500;
+const CANVAS_W_SIZE = 400;
+const CANVAS_H_SIZE = 500;
 const INITIAL_COLOR = "#2c2c2c";
 
-canvas.width = CANVAS_SIZE;
-canvas.height = CANVAS_SIZE;
+canvas.width = CANVAS_W_SIZE;
+canvas.height = CANVAS_H_SIZE;
 
 /*pixel modifier*/
 ctx.fillStyle = "white";
-ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+ctx.fillRect(0, 0, CANVAS_W_SIZE, CANVAS_H_SIZE);
 ctx.strokeStyle = INITIAL_COLOR;
 ctx.fillStyle = INITIAL_COLOR;
 ctx.lineWidth = 2.5;
@@ -77,7 +78,7 @@ function fill(color = null) {
   if (color !== null) {
     ctx.fillStyle = color;
   }
-  ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  ctx.fillRect(0, 0, CANVAS_W_SIZE, CANVAS_H_SIZE);
   ctx.fillStyle = currentColor;
 }
 

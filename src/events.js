@@ -23,7 +23,8 @@ const events = {
   leaderShotClock: "leaderShotClock",
   timeOut: "timeOut",
   via: "via",
-  normalShotClock: "normalShotClock"
+  normalShotClock: "normalShotClock",
+  goAway: "goAway"
 };
 
 export default events;

@@ -35,3 +35,9 @@ if (nickName === null) {
 if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
 }
+
+export const handleGoAway = () => {
+  localStorage.removeItem(NICKNAME);
+  alert("User is full😥");
+  setTimeout(() => location.reload(), 100);
+};
