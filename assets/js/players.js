@@ -1,4 +1,4 @@
-import { disableCanvas, enableCanvas } from "./paint";
+import { disableCanvas, enableCanvas, handleFilled } from "./paint";
 import { disableChat, enableChat } from "./chat";
 import { getSocket } from "./sockets";
 
@@ -82,6 +82,7 @@ export const handleGameStarted = () => {
 
 export const handleGameEnded = () => {
   setWords("Game Ended");
+  setTimeout(() => handleFilled({ color: "white" }), 3000);
   disableCanvas();
 };
 

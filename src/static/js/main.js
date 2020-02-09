@@ -469,6 +469,11 @@ exports.handleGameStarted = handleGameStarted;
 
 var handleGameEnded = function handleGameEnded() {
   setWords("Game Ended");
+  setTimeout(function () {
+    return (0, _paint.handleFilled)({
+      color: "white"
+    });
+  }, 3000);
   (0, _paint.disableCanvas)();
 };
 
