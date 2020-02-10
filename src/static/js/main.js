@@ -70,9 +70,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.handleGoAway = void 0;
-
-var _sockets = require("./sockets");
-
 var body = document.querySelector("body");
 var loginForm = document.getElementById("jsLoginForm");
 var input = loginForm.querySelector("input");
@@ -81,6 +78,24 @@ var LOGGED_IN = "loggedIn";
 var NICKNAME = "nickname";
 var nickName = localStorage.getItem(NICKNAME);
 
+var login = function login(nickname) {
+  // eslint-disable-next-line no-undef
+  var socket = io("/");
+  socket.emit(window.events.setNickname, {
+    nickname: nickname
+  });
+};
+
+var handleGoAway = function handleGoAway() {
+  localStorage.removeItem(NICKNAME);
+  alert("User is full😥");
+  setTimeout(function () {
+    return location.reload();
+  }, 100);
+};
+
+exports.handleGoAway = handleGoAway;
+
 var handleLogin = function handleLogin(e) {
   e.preventDefault();
   var value = input.value;
@@ -88,15 +103,6 @@ var handleLogin = function handleLogin(e) {
   localStorage.setItem(NICKNAME, value);
   body.className = LOGGED_IN;
   login(value);
-};
-
-var login = function login(nickname) {
-  // eslint-disable-next-line no-undef
-  var socket = io("/");
-  socket.emit(window.events.setNickname, {
-    nickname: nickname
-  });
-  (0, _sockets.initSockets)(socket);
 };
 
 if (nickName === null) {
@@ -110,17 +116,7 @@ if (loginForm) {
   loginForm.addEventListener("submit", handleLogin);
 }
 
-var handleGoAway = function handleGoAway() {
-  localStorage.removeItem(NICKNAME);
-  alert("User is full😥");
-  setTimeout(function () {
-    return location.reload();
-  }, 100);
-};
-
-exports.handleGoAway = handleGoAway;
-
-},{"./sockets":7}],3:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 require("./sockets");
@@ -538,7 +534,7 @@ if (readyBtn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSocket = exports.initSockets = void 0;
+exports.getSocket = void 0;
 
 var _notifications = require("./notifications");
 
@@ -552,10 +548,17 @@ var _login = require("./login");
 
 var socket = null;
 
-var initSockets = function initSockets(aSocket) {
+var getSocket = function getSocket() {
+  return socket;
+};
+
+exports.getSocket = getSocket;
+
+var initSockets = function initSockets() {
+  // eslint-disable-next-line no-undef
+  var socket = io("/");
   var _window = window,
       events = _window.events;
-  socket = aSocket;
   socket.on(events.newUser, _notifications.handleNewUser);
   socket.on(events.disconnected, _notifications.handleDisconnect);
   socket.on(events.newMsg, _chat.handleNewMsg);
@@ -574,12 +577,10 @@ var initSockets = function initSockets(aSocket) {
   socket.on(events.goAway, _login.handleGoAway);
 };
 
-exports.initSockets = initSockets;
-
-var getSocket = function getSocket() {
-  return socket;
+var init = function init() {
+  return initSockets();
 };
 
-exports.getSocket = getSocket;
+init();
 
 },{"./chat":1,"./login":2,"./notifications":4,"./paint":5,"./players":6}]},{},[3]);

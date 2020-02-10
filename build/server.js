@@ -8,6 +8,8 @@ var _path = require("path");
 
 var _dotenv = _interopRequireDefault(require("dotenv"));
 
+var _cookieParser = _interopRequireDefault(require("cookie-parser"));
+
 var _socket = _interopRequireDefault(require("socket.io"));
 
 var _socketController = _interopRequireDefault(require("./socketController"));
@@ -23,6 +25,7 @@ var PORT = process.env.PORT || 2000;
 app.set("view engine", "pug");
 app.set("views", (0, _path.join)(__dirname, "views"));
 app.use((0, _morgan["default"])("dev"));
+app.use((0, _cookieParser["default"])());
 app.use(_express["default"]["static"]((0, _path.join)(__dirname, "static")));
 app.get("/", function (req, res) {
   return res.render("main", {

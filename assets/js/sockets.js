@@ -16,9 +16,12 @@ import { handleGoAway } from "./login";
 
 let socket = null;
 
-export const initSockets = aSocket => {
+export const getSocket = () => socket;
+
+const initSockets = () => {
+  // eslint-disable-next-line no-undef
+  const socket = io("/");
   const { events } = window;
-  socket = aSocket;
   socket.on(events.newUser, handleNewUser);
   socket.on(events.disconnected, handleDisconnect);
   socket.on(events.newMsg, handleNewMsg);
@@ -37,4 +40,6 @@ export const initSockets = aSocket => {
   socket.on(events.goAway, handleGoAway);
 };
 
-export const getSocket = () => socket;
+const init = () => initSockets();
+
+init();

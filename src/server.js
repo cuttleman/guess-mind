@@ -2,6 +2,7 @@ import express from "express";
 import logger from "morgan";
 import { join } from "path";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import socketIO from "socket.io";
 import socketController from "./socketController";
 import events from "./events";
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 2000;
 app.set("view engine", "pug");
 app.set("views", join(__dirname, "views"));
 app.use(logger("dev"));
+app.use(cookieParser());
 app.use(express.static(join(__dirname, "static")));
 
 app.get("/", (req, res) =>
