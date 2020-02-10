@@ -13,12 +13,12 @@ const clean = () => del(["src/static"]);
 const paths = {
   styles: {
     src: "assets/scss/styles.scss",
-    dest: "src/static/styles",
+    dest: "static",
     watch: "assets/scss/**/*.scss"
   },
   js: {
     src: "assets/js/main.js",
-    dest: "src/static/js",
+    dest: "static",
     watch: "assets/js/**/*.js"
   }
 };

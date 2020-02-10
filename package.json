@@ -30,12 +30,12 @@
     "socket.io": "^2.3.0"
   },
   "scripts": {
-    "dev:server": "nodemon --exec babel-node src/server --ignore assets,src/static",
-    "dev:assets": "gulp",
-    "build:server": "babel src --out-dir build --ignore assets,src/static",
-    "build:assets": "gulp",
+    "dev:server": "nodemon --exec babel-node src/server --ignore src/assets --ignore src/static",
+    "dev:assets": "cd src && gulp",
+    "build:server": "babel src --out-dir build --ignore src/assets,src/static,src/gulpfile.babel.js",
+    "build:assets": "cd src && gulp",
     "copyAll": "cp -R src/views build && cp -R src/static build",
-    "build:del":"rm -rf build",
+    "build:del": "rm -rf build",
     "build": "npm run build:server && npm run build:assets && npm run copyAll",
     "start": "node build/server.js"
   }

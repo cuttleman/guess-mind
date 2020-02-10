@@ -26,7 +26,7 @@ app.set("view engine", "pug");
 app.set("views", (0, _path.join)(__dirname, "views"));
 app.use((0, _morgan["default"])("dev"));
 app.use((0, _cookieParser["default"])());
-app.use(_express["default"]["static"]((0, _path.join)(__dirname, "static")));
+app.use("/static", _express["default"]["static"]((0, _path.join)(__dirname, "static")));
 app.get("/", function (req, res) {
   return res.render("main", {
     events: JSON.stringify(_events["default"])

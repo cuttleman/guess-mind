@@ -1,3 +1,5 @@
+import { initSockets } from "./sockets";
+
 const body = document.querySelector("body");
 const loginForm = document.getElementById("jsLoginForm");
 const input = loginForm.querySelector("input");
@@ -11,12 +13,7 @@ const login = nickname => {
   // eslint-disable-next-line no-undef
   const socket = io("/");
   socket.emit(window.events.setNickname, { nickname });
-};
-
-export const handleGoAway = () => {
-  localStorage.removeItem(NICKNAME);
-  alert("User is full😥");
-  setTimeout(() => location.reload(), 100);
+  initSockets(socket);
 };
 
 const handleLogin = e => {

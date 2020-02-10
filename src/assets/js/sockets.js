@@ -1,4 +1,4 @@
-import { handleNewUser, handleDisconnect } from "./notifications";
+import { handleNewUser, handleDisconnect, handleGoAway } from "./notifications";
 import { handleNewMsg } from "./chat";
 import { handleBeganPath, handleStrokedPath, handleFilled } from "./paint";
 import {
@@ -12,16 +12,15 @@ import {
   handleLeaderShotClock,
   handleNormalShotClock
 } from "./players";
-import { handleGoAway } from "./login";
 
 let socket = null;
 
 export const getSocket = () => socket;
 
-const initSockets = () => {
-  // eslint-disable-next-line no-undef
-  const socket = io("/");
+export const initSockets = aSocket => {
   const { events } = window;
+  socket = aSocket;
+
   socket.on(events.newUser, handleNewUser);
   socket.on(events.disconnected, handleDisconnect);
   socket.on(events.newMsg, handleNewMsg);
@@ -39,7 +38,3 @@ const initSockets = () => {
   socket.on(events.normalShotClock, handleNormalShotClock);
   socket.on(events.goAway, handleGoAway);
 };
-
-const init = () => initSockets();
-
-init();

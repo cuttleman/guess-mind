@@ -16,7 +16,7 @@ app.set("view engine", "pug");
 app.set("views", join(__dirname, "views"));
 app.use(logger("dev"));
 app.use(cookieParser());
-app.use(express.static(join(__dirname, "static")));
+app.use("/static", express.static(join(__dirname, "static")));
 
 app.get("/", (req, res) =>
   res.render("main", { events: JSON.stringify(events) })

@@ -104,8 +104,14 @@ const socketController = (socket, io) => {
       message: `${socket.nickname} Ready`,
       nickname: BOT
     });
-    if (playerReady.length === 2) {
-      startGame();
+    if (sockets.length === 2) {
+      if (playerReady.length === 2) {
+        startGame();
+      }
+    } else if (sockets.length === 3) {
+      if (playerReady.length === 3) {
+        startGame();
+      }
     }
   });
 
