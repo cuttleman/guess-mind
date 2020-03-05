@@ -6,8 +6,8 @@ const colors = document.getElementsByClassName("jsColor");
 const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const save = document.getElementById("jsSave");
-const CANVAS_W_SIZE = 300;
-const CANVAS_H_SIZE = 300;
+const CANVAS_W_SIZE = 400;
+const CANVAS_H_SIZE = 500;
 const INITIAL_COLOR = "#2c2c2c";
 
 canvas.width = CANVAS_W_SIZE;
@@ -47,10 +47,8 @@ const strokePath = (x, y, color = null) => {
 };
 
 function onMouseMove(event) {
-  event.preventDefault();
-  const changePoint = event.changedTouches;
-  const x = window.innerWidth >= 500 ? event.offsetX : changePoint[0].clientX;
-  const y = window.innerWidth >= 500 ? event.offsetY : changePoint[0].clientY;
+  const x = event.offsetX;
+  const y = event.offsetY;
   if (!painting) {
     beginPath(x, y);
     getSocket().emit(window.events.beginPath, { x, y });
@@ -142,35 +140,19 @@ export const handleFilled = ({ color }) => {
 };
 
 export const disableCanvas = () => {
-  if (window.innerWidth >= 500) {
-    canvas.removeEventListener("mousemove", onMouseMove);
-    canvas.removeEventListener("mousedown", startPainting);
-    canvas.removeEventListener("mouseup", stopPainting);
-    canvas.removeEventListener("mouseleave", stopPainting);
-    canvas.removeEventListener("click", handleFillCanvas);
-  } else {
-    canvas.removeEventListener("touchmove", onMouseMove, false);
-    canvas.removeEventListener("touchstart", startPainting, false);
-    canvas.removeEventListener("touchend", stopPainting, false);
-    canvas.removeEventListener("touchcancel", stopPainting, false);
-    canvas.removeEventListener("click", handleFillCanvas, false);
-  }
+  canvas.removeEventListener("mousemove", onMouseMove);
+  canvas.removeEventListener("mousedown", startPainting);
+  canvas.removeEventListener("mouseup", stopPainting);
+  canvas.removeEventListener("mouseleave", stopPainting);
+  canvas.removeEventListener("click", handleFillCanvas);
 };
 
 export const enableCanvas = () => {
-  if (window.innerWidth >= 500) {
-    canvas.addEventListener("mousemove", onMouseMove);
-    canvas.addEventListener("mousedown", startPainting);
-    canvas.addEventListener("mouseup", stopPainting);
-    canvas.addEventListener("mouseleave", stopPainting);
-    canvas.addEventListener("click", handleFillCanvas);
-  } else {
-    canvas.addEventListener("touchmove", onMouseMove, false);
-    canvas.addEventListener("touchstart", startPainting, false);
-    canvas.addEventListener("touchend", stopPainting, false);
-    canvas.addEventListener("touchcancel", stopPainting, false);
-    canvas.addEventListener("click", handleFillCanvas, false);
-  }
+  canvas.addEventListener("mousemove", onMouseMove);
+  canvas.addEventListener("mousedown", startPainting);
+  canvas.addEventListener("mouseup", stopPainting);
+  canvas.addEventListener("mouseleave", stopPainting);
+  canvas.addEventListener("click", handleFillCanvas);
 };
 
 if (canvas) {
