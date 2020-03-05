@@ -7,7 +7,7 @@ const range = document.getElementById("jsRange");
 const mode = document.getElementById("jsMode");
 const save = document.getElementById("jsSave");
 const CANVAS_W_SIZE = 300;
-const CANVAS_H_SIZE = 360;
+const CANVAS_H_SIZE = 300;
 const INITIAL_COLOR = "#2c2c2c";
 
 canvas.width = CANVAS_W_SIZE;
@@ -47,8 +47,10 @@ const strokePath = (x, y, color = null) => {
 };
 
 function onMouseMove(event) {
-  const x = event.offsetX;
-  const y = event.offsetY;
+  event.preventDefault();
+  const changePoint = event.changedTouches;
+  const x = window.innerWidth >= 500 ? event.offsetX : changePoint[0].clientX;
+  const y = window.innerWidth >= 500 ? event.offsetY : changePoint[0].clientY;
   if (!painting) {
     beginPath(x, y);
     getSocket().emit(window.events.beginPath, { x, y });
@@ -147,11 +149,11 @@ export const disableCanvas = () => {
     canvas.removeEventListener("mouseleave", stopPainting);
     canvas.removeEventListener("click", handleFillCanvas);
   } else {
-    canvas.removeEventListener("touchmove", onMouseMove);
-    canvas.removeEventListener("touchstart", startPainting);
-    canvas.removeEventListener("touchend", stopPainting);
-    canvas.removeEventListener("touchcancel", stopPainting);
-    canvas.removeEventListener("click", handleFillCanvas);
+    canvas.removeEventListener("touchmove", onMouseMove, false);
+    canvas.removeEventListener("touchstart", startPainting, false);
+    canvas.removeEventListener("touchend", stopPainting, false);
+    canvas.removeEventListener("touchcancel", stopPainting, false);
+    canvas.removeEventListener("click", handleFillCanvas, false);
   }
 };
 
@@ -163,11 +165,11 @@ export const enableCanvas = () => {
     canvas.addEventListener("mouseleave", stopPainting);
     canvas.addEventListener("click", handleFillCanvas);
   } else {
-    canvas.addEventListener("touchmove", onMouseMove);
-    canvas.addEventListener("touchstart", startPainting);
-    canvas.addEventListener("touchend", stopPainting);
-    canvas.addEventListener("touchcancel", stopPainting);
-    canvas.addEventListener("click", handleFillCanvas);
+    canvas.addEventListener("touchmove", onMouseMove, false);
+    canvas.addEventListener("touchstart", startPainting, false);
+    canvas.addEventListener("touchend", stopPainting, false);
+    canvas.addEventListener("touchcancel", stopPainting, false);
+    canvas.addEventListener("click", handleFillCanvas, false);
   }
 };
 
