@@ -56,9 +56,7 @@ const watchFiles = () => {
 };
 
 // eslint-disable-next-line no-unused-vars
-const dev = gulp.series(clean, styles, js, watchFiles);
+export const dev = gulp.series(clean, styles, js, watchFiles);
 
 // eslint-disable-next-line no-unused-vars
-const build = gulp.series(clean, styles, js);
-
-export default build;
+export const build = gulp.series(clean, styles, js);

@@ -15,8 +15,8 @@
    .canvas-box{
       display: flex;
       .canvas {
-         width: 400px;
-         height: 500px;
+         // width: 300px;
+         // height: 360px;
          background-color: white;
          border-radius: 10px;
          border-bottom-right-radius: 0px;
@@ -55,8 +55,8 @@
             display: flex;
             flex-direction: column;
             .controls__color {
-               width: 80px;
-               height: 49px;
+               width: 60px;
+               height: 33.4px;
                transition: opacity 0.2s linear;
                &:last-child{
                   border-bottom-right-radius: 10px;
@@ -70,10 +70,10 @@
       }
    }
    .player__section{
-      max-width: 480px;
+      max-width: 375px;
       display: grid;
-      grid-template-columns: 0.6fr 0.7fr 3fr;
-      grid-template-rows: 0.3fr 0.3fr 0.6fr;
+      grid-template-columns: 0.5fr 0.5fr 2fr;
+      grid-template-rows: 0.3fr 0.7fr 2fr;
       grid-gap:5px;
       grid-template-areas: 
       "ready ready chat"
@@ -96,7 +96,7 @@
          display: flex;
          justify-self: center;
          align-self: center;
-         padding: 8px 34px;
+         padding: 10px 20px;
          border-radius: 10px;
          color: #95a5a6;
          font-family: 'Jua', sans-serif;
@@ -130,8 +130,8 @@
          flex-direction: column;
          align-items: center;
          .chat__messages{
-             width: 300px;        
-             height: 160px;
+             width: 200px;        
+             height: 200px;
              background-color: white;
              padding: 10px 15px;
              border-top-left-radius: 10px;
@@ -180,7 +180,7 @@
          }
          .chat__form{
              .chat__input{
-                width: 300px;
+                width: 200px;
                 border-bottom-left-radius: 10px;
                 border-bottom-right-radius: 10px;
                 border: none;

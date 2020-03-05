@@ -31,12 +31,12 @@
   },
   "scripts": {
     "dev:server": "nodemon --exec babel-node src/server --ignore src/assets --ignore src/static",
-    "dev:assets": "cd src && gulp",
+    "dev:assets": "cd src && gulp dev",
     "build:server": "babel src --out-dir build --ignore src/assets,src/static,src/gulpfile.babel.js",
-    "build:assets": "cd src && gulp",
+    "build:assets": "cd src && gulp build",
     "copyAll": "cp -R src/views build && cp -R src/static build",
     "build:del": "rm -rf build",
-    "build": "npm run build:server && npm run build:assets && npm run copyAll",
+    "build": "npm run build:del && npm run build:server && npm run build:assets && npm run copyAll",
     "start": "node build/server.js"
   }
 }
