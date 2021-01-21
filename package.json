@@ -27,7 +27,7 @@
     "node-sass": "^4.13.1",
     "nodemon": "^2.0.2",
     "pug": "^2.0.4",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "scripts": {
     "dev:server": "nodemon --exec babel-node src/server --ignore src/assets --ignore src/static",
